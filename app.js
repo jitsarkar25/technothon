@@ -1,3 +1,5 @@
+shelvespos = [];
+
 function doFirst(shelves){
 	
 	
@@ -7,7 +9,9 @@ function doFirst(shelves){
 	canvas.fillRect(20, 20, 300, 500);
 	
 	var remainingshelf=480-(shelves*10);
-	var gapsshelf=remainingshelf/(parseInt(shelves)+1);
+	gapsshelf=remainingshelf/(parseInt(shelves)+1);
+
+	//ystart=gapsshelf+20;
 	console.log('gapsshelf '+gapsshelf+' remainingshelf '+remainingshelf);
 	
 	var pos=10;
@@ -18,14 +22,51 @@ function doFirst(shelves){
 		canvas.fillRect(20, pos, 300, 10);
 	}
 	canvas.shadowColor="";
+	
 }
 
 function btnClicked(){
-	shelves =  document.getElementById('noOfShelves').value;
+	shelves++; //document.getElementById('noOfShelves').value;
 	//alert(shelves);
+	shelvespos = [];
+		
 	doFirst(shelves);
+	putShelfPosition();
+	ystart=gapsshelf+20;
+	console.log('start y top row '+ystart);
+
+	changedShelves=true;
+	//manipulateImages();
+	isfull=false;
+	placeOnShelf();
 	
 }
+function putShelfPosition(){
+	var initpos=0;
+	for(var i=0;i<shelves;i++)
+	{	
+		if(i!=0)
+			initpos+=gapsshelf+10;
+		else
+			initpos+=gapsshelf;
+		shelvespos.push(initpos);
+	}
+}
+
+function removeshelf(){
+	if(shelves==1)
+		alert('Minimum 1 shelf is required');
+	 else if(currentRow>shelves-1){
+		alert('Items present cannot remove shelf');
+	}	 
+	 else{
+		shelves--;
+		doFirst(shelves);
+		ystart=gapsshelf+20;
+		placeOnShelf();
+	 }
+}
+
 function setup(){
 	x = document.getElementById('shelfcanvas');
 	canvas = x.getContext("2d");
@@ -41,5 +82,9 @@ function setup(){
 		canvas.shadowBlur = 30;
 		canvas.shadowOffsetX = 3;
 		canvas.shadowOffsetY = 10;
+		shelves=1;
+		doFirst(shelves);
+		ystart=gapsshelf+20;
+		
 }
 window.addEventListener("load",setup,false);
